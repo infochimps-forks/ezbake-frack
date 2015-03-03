@@ -31,10 +31,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apache.accumulo</groupId>
-            <artifactId>accumulo-typo</artifactId>
-        </dependency>
 
         <!-- EzBake dependencies -->
         <dependency>
