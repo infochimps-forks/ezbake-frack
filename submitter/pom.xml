@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--   Copyright (C) 2013-2015 Computer Sciences Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>ezbake</groupId>
+        <artifactId>ezbake-frack-parent</artifactId>
+        <version>2.1</version>
+    </parent>
+
+    <artifactId>frack-submitter-service</artifactId>
+
+    <dependencies>
+        <!-- Third-Party dependencies -->
+        <dependency>
+            <groupId>org.apache.storm</groupId>
+            <artifactId>storm-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>args4j</groupId>
+            <artifactId>args4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ant</groupId>
+            <artifactId>ant</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- EzBake dependencies -->
+        <dependency>
+            <groupId>ezbake</groupId>
+            <artifactId>thrift-utils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ezbake</groupId>
+            <artifactId>ezbake-base-thrift-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ezbake</groupId>
+            <artifactId>frack-submitter-thrift</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ezbake</groupId>
+            <artifactId>ezbroadcast-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ezbake</groupId>
+            <artifactId>frack-api</artifactId>
+            <version>2.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>ezbake</groupId>
+            <artifactId>frack-storm</artifactId>
+            <version>2.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>ezbake</groupId>
+            <artifactId>frack-eventbus</artifactId>
+            <version>2.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>ezbake</groupId>
+            <artifactId>frack-logging</artifactId>
+            <version>2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>ezbake</groupId>
+            <artifactId>frack-context-provider</artifactId>
+            <version>2.1</version>
+        </dependency>
+
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <configuration>
+                    <transformers>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                            <mainClass>ezbake.frack.submitter.PipelineSubmitter</mainClass>
+                        </transformer>
+                    </transformers>
+                    <artifactSet>
+                        <excludes>
+                            <exclude>ezbake:frack-api</exclude>
+                            <exclude>ezbake:frack-eventbus</exclude>
+                            <exclude>ezbake:frack-storm</exclude>
+                        </excludes>
+                    </artifactSet>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>rpmbuild</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>rpm-maven-plugin</artifactId>
+                        <configuration>
+                            <description>Frack Submitter Thrift service and executable</description>
+                            <group>ezbake</group>
+                            <mappings>
+                                <mapping>
+                                    <directory>/opt/ezbake</directory>
+                                    <filemode>755</filemode>
+                                    <groupname>ezbake</groupname>
+                                    <username>ezbake</username>
+                                    <directoryIncluded>true</directoryIncluded>
+                                </mapping>
+                                <mapping>
+                                    <directory>/opt/ezbake/${project.artifactId}</directory>
+                                    <filemode>755</filemode>
+                                    <groupname>ezbake</groupname>
+                                    <username>ezbake</username>
+                                    <directoryIncluded>true</directoryIncluded>
+                                </mapping>
+                                <mapping>
+                                    <directory>/opt/ezbake/${project.artifactId}/lib</directory>
+                                    <filemode>755</filemode>
+                                    <groupname>ezbake</groupname>
+                                    <username>ezbake</username>
+                                    <directoryIncluded>true</directoryIncluded>
+                                </mapping>
+                                <mapping>
+                                    <directory>/opt/ezbake/${project.artifactId}/lib</directory>
+                                    <filemode>644</filemode>
+                                    <groupname>ezbake</groupname>
+                                    <username>ezbake</username>
+                                    <directoryIncluded>false</directoryIncluded>
+                                    <sources>
+                                        <source>
+                                            <location>
+                                                target/${project.artifactId}-${project.version}-jar-with-dependencies.jar
+                                            </location>
+                                            <destination>${project.artifactId}-${project.version}.jar</destination>
+                                        </source>
+                                        <softlinkSource>
+                                            <location>${project.artifactId}-${project.version}.jar</location>
+                                            <destination>${project.artifactId}.jar</destination>
+                                        </softlinkSource>
+                                    </sources>
+                                </mapping>
+                                <mapping>
+                                    <directory>/opt/ezbake/${project.artifactId}/etc</directory>
+                                    <filemode>755</filemode>
+                                    <groupname>ezbake</groupname>
+                                    <username>ezbake</username>
+                                    <directoryIncluded>true</directoryIncluded>
+                                </mapping>
+                                <mapping>
+                                    <directory>/opt/ezbake/${project.artifactId}/etc</directory>
+                                    <filemode>644</filemode>
+                                    <groupname>ezbake</groupname>
+                                    <username>ezbake</username>
+                                    <directoryIncluded>false</directoryIncluded>
+                                    <configuration>true</configuration>
+                                    <sources>
+                                        <source>
+                                            <location>src/main/buildpack</location>
+                                        </source>
+                                    </sources>
+                                </mapping>
+                            </mappings>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
