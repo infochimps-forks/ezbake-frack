@@ -150,7 +150,6 @@
                          <artifactId>rpm-maven-plugin</artifactId>
                          <configuration>
                              <description>Frack Submitter Thrift service and executable</description>
-                             <group>ezbake</group>
                              <mappings>
                                  <mapping>
                                      <directory>/opt/ezbake</directory>

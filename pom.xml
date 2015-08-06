@@ -317,8 +317,10 @@
                         </execution>
                     </executions>
                     <configuration>
+                        <group>ezbake</group>
+                        <name>ezbake-${project.artifactId}</name>
                         <release>${buildNumber}</release>
-                        <vendor>42Six</vendor>
+                        <vendor>Infochimps, CSC</vendor>
                         <license>ASL 2.0</license>
                         <needarch>false</needarch>
                         <defineStatements>
