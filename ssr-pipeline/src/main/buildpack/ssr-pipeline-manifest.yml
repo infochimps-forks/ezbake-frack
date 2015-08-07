@@ -15,10 +15,10 @@
 Application:
   name: ssrIndexing
   datasets: []
-  security_id: 9603501767071957970
+  security_id: -1
   auths: []
 
-  Services: 
+  Services:
     -
       type: Frack
       pipeline_name: ssrPipeline
