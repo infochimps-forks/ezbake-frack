@@ -93,6 +93,9 @@
                          <artifactId>rpm-maven-plugin</artifactId>
                          <configuration>
                              <description>SSR pipeline fracker</description>
+                             <requires>
+                               <require>ezbake-thrift-runner &gt;= 2.1</require>
+                             </requires>
                          </configuration>
                      </plugin>
                  </plugins>
