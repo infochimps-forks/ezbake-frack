@@ -51,6 +51,8 @@ public class SpoutPublisher implements Publisher {
 
     @Override
     public void publish(Class<? extends Serializable> aClass, Envelope envelope) {
+	log.trace("publishing {} of class {}.", aClass.getCanonicalName(), envelope);
+
         if (isFaultTolerant) {
             stormLedger.insert(pipeInfo, envelope);
         }

@@ -155,6 +155,7 @@ public abstract class Pipe<O extends Serializable> implements Serializable {
      * @throws IOException
      */
     protected void outputToPipes(Visibility visibility, O object) throws IOException {
+	log.trace("writing {} to pipe with visbility {}!", object, visibility);
         output.toPipes(visibility, object);
     }
 

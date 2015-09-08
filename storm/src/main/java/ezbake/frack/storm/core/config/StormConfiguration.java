@@ -22,12 +22,19 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class StormConfiguration extends Properties implements Serializable {
+    private static final Logger log = LoggerFactory.getLogger(StormConfiguration.class);
+
     public static final String ENVELOPE_DATA_FIELD = "ezbake.frack.storm.fields.envelope";
     public static final int QUEUE_CHECK_WAIT_TIME_MS = 15000;
 
     public StormConfiguration(Properties props) throws IOException {
         putAll(props);
+
+	log.info("properties for storm configuration: {}", props);
 
         put(Config.NIMBUS_THRIFT_PORT, Integer.parseInt(getProperty(Config.NIMBUS_THRIFT_PORT)));
         put(Config.STORM_THRIFT_TRANSPORT_PLUGIN, SimpleTransportPlugin.class.getCanonicalName());
@@ -43,6 +50,11 @@ public class StormConfiguration extends Properties implements Serializable {
         } else {
             put(Config.TOPOLOGY_WORKERS, 1);
         }
+
+	boolean debug = Boolean.valueOf(getProperty(PipelineConfiguration.DEBUG, "false"));
+	log.info("debug topology: {}", debug);
+	put(Config.TOPOLOGY_DEBUG, debug);
+	
     }
 
     public int getNumExecutors(String pipeId) {

@@ -114,7 +114,7 @@ public class WarehausWorker<T extends Serializable> extends Worker<T> {
             EzSecurityToken securityToken = securityClient.fetchAppToken(warehausSecurityId);
             Repository repository = fromObjectToRepository.convert(thriftObject);
             Visibility documentVisibility = fromObjectToVisibility.convert(thriftObject);
-            logger.info("inserting {} into warehouse with visibility {}", repository.getUri(), documentVisibility);
+            logger.trace("inserting {} into warehouse with visibility {}", repository.getUri(), documentVisibility);
             status = warehaus.insert(repository, documentVisibility, securityToken);
             this.pool.returnToPool(warehaus);
             warehaus = null;
@@ -122,6 +122,7 @@ public class WarehausWorker<T extends Serializable> extends Worker<T> {
                 logger.error("Failed to successfully ingest object to warehouse. IngestStatus {}", status);
                 throw new IOException("Failed to successfully ingest object to warehouse.");
             }
+	    logger.trace("sending {} to pipes", thriftObject);
             outputToPipes(documentVisibility, thriftObject);
         } catch (IOException | TException e) {
             logger.warn("Tried to send document to warehaus: {}", e);

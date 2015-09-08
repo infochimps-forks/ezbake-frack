@@ -53,6 +53,8 @@ public class BoltPublisher implements WorkerPublisher<Serializable> {
 
     @Override
     public void publish(Class<? extends Serializable> aClass, Envelope envelope) {
+	log.trace("publishing {} of class {}.", aClass.getCanonicalName(), envelope);
+
         if (isFaultTolerant) {
             stormLedger.insert(pipeInfo, envelope);
         }
@@ -62,6 +64,8 @@ public class BoltPublisher implements WorkerPublisher<Serializable> {
 
     @Override
     public void broadcast(String topic, Visibility visibility, byte[] message) throws IOException {
+	log.trace("broadcasting to topic {} with visibility {}", topic, visibility);
+
         if (broadcaster != null) {
             broadcaster.broadcast(topic, visibility, message);
         } else {

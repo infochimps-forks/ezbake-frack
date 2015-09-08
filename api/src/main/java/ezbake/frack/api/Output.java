@@ -22,7 +22,12 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Output<T extends Serializable> implements Serializable {
+    private static final Logger log = LoggerFactory.getLogger(Output.class);
+
     private Publisher publisher = null;
 
     protected void registerPublisher(Publisher p) {
@@ -34,6 +39,8 @@ public class Output<T extends Serializable> implements Serializable {
     }
 
     public void toPipes(Visibility visibility, T object) throws IOException {
+	log.trace("sending {} to pipes", object);
+
         if (publisher == null) {
             throw new RuntimeException("A publisher must be registered to outputToPipes");
         }

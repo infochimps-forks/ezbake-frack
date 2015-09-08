@@ -108,11 +108,16 @@ public class BroadcastWorker<T extends Serializable> extends Worker<T> {
     }
 
     private void broadcastTopics(Visibility visibility, T object) throws IOException {
-        if(getBroadcastTopics().isEmpty()) return;
+        if(getBroadcastTopics().isEmpty()) {
+	    logger.trace("no topics to broadcast to.");
+	    return;
+	}
         try {
             TBase thriftToBroadcast = getConverter().convert(object);
-            for(String topic : getBroadcastTopics()) {
-                logger.info("Broadcast to the {} topic with {} visibility", topic, visibility);
+	    Set<String> broadcastTopics = getBroadcastTopics();
+	    logger.trace("broadcast topics: {}", broadcastTopics);
+            for(String topic : broadcastTopics) {
+                logger.trace("Broadcast to the {} topic with {} visibility", topic, visibility);
                 broadcast(topic, visibility, thriftToBroadcast);
             }
         } catch (TException e) {

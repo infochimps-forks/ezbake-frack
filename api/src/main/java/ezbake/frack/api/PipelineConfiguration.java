@@ -101,4 +101,6 @@ public class PipelineConfiguration {
      * Worker from which the object was Quarantined.
      */
     public static final String ENABLE_QUARANTINE = "ezbake.frack.api.quarantine.enable";
+
+    public static final String DEBUG = "ezbake.frack.api.debug";
 }
